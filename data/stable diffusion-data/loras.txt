@@ -1,0 +1,4 @@
+number	id	desc
+1	lora:pensketch_lora_v2.3:1	线条速写
+2	lora:pixarStyleModel_lora128:1	动漫
+3	lora:knittedstyle2:1	针织毛线
