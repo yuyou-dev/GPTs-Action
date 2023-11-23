@@ -1,0 +1,4 @@
+number	id	desc
+1	majicmixRealistic_v6.safetensors [e4a30e4607]	写实风格的模型
+2	DreamShaper/dreamshaper_8Inpainting.safetensors [ac84e05d50]	动漫卡通风格模型
+3	revAnimated_v122.safetensors [4199bcdd14]	通用风格，推荐
