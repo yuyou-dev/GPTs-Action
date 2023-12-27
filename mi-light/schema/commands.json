@@ -1,0 +1,108 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "家电控制器",
+    "description": "控制家中各种电器设备的状态。",
+    "version": "v1.0.0"
+  },
+  "servers": [
+    {
+      "url": "https://m.h5in.net"
+    }
+  ],
+  "paths": {
+    "/gpts_dev/api/turn_on_light/": {
+      "get": {
+        "description": "开灯",
+        "operationId": "TurnOnLight",
+        "parameters": [
+          {
+            "name": "value",
+            "in": "query",
+            "description": "灯的亮度，1-100之间，100是最亮，根据天黑程度来决定",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "minimum": 1,
+              "maximum": 100
+            }
+          },
+          {
+            "name": "color",
+            "in": "query",
+            "description": "灯的颜色，有红色和普通两种，根据氛围来决定用哪种颜色",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "red",
+                "normal"
+              ]
+            }
+          }
+        ],
+        "deprecated": false
+      }
+    },
+    "/gpts_dev/api/cat/": {
+      "get": {
+        "description": "启用自动喂猫器，给猫咪喂猫粮",
+        "operationId": "FeedCat",
+        "parameters": [
+          {
+            "name": "number",
+            "in": "query",
+            "description": "猫粮的份数，与猫的数量成正比，1只猫喂1份，2只猫喂2份，依此类推，最多5份",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int32",
+              "minimum": 1,
+              "maximum": 5
+            }
+          }
+        ],
+        "deprecated": false
+      }
+    },
+    "/gpts_dev/api/turn_off_light": {
+      "get": {
+        "description": "关灯",
+        "operationId": "TurnOffLight",
+        "deprecated": false
+      }
+    },
+    "/gpts_dev/api/start_robotic_vacuum": {
+      "get": {
+        "description": "运行扫地机器人",
+        "operationId": "StartRoboticVacuum",
+        "deprecated": false
+      }
+    },
+    "/gpts_dev/api/stop_robotic_vacuum": {
+      "get": {
+        "description": "停止扫地机器人",
+        "operationId": "StopRoboticVacuum",
+        "deprecated": false
+      }
+    },
+    "/gpts_dev/api/open_curtains": {
+      "get": {
+        "description": "开窗帘",
+        "operationId": "OpenCurtains",
+        "deprecated": false
+      }
+    },
+    "/gpts_dev/api/close_curtains": {
+      "get": {
+        "description": "关窗帘",
+        "operationId": "CloseCurtains",
+        "deprecated": false
+      }
+    }
+  },
+  "components": {
+    "schemas": {}
+  }
+}
