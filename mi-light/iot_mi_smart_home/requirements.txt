@@ -1,0 +1,4 @@
+requests
+pycryptodome
+python-miio
+aiohttp

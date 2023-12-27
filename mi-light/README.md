@@ -1,27 +1,80 @@
-# 小米智能管家python开发
+# 使用 GPTs 的 Actions 控制家用电器
 
-相关参考链接如下：
+> 概述：本节课你将会学会如何使用actions控制家用电器的使用。
+> 
 
-[https://github.com/cxr1/py-miio-for-Xiaomi-Mi-Smart-WiFi-Socket](https://github.com/cxr1/py-miio-for-Xiaomi-Mi-Smart-WiFi-Socket)
+项目结构如下
 
-[https://github.com/PiotrMachowski/Xiaomi-cloud-tokens-extractor](https://github.com/PiotrMachowski/Xiaomi-cloud-tokens-extractor)
-
-https://github.com/rytilahti/python-miio/
-
-小米python官网：[https://python-miio.readthedocs.io/en/latest/index.html#installation](https://python-miio.readthedocs.io/en/latest/index.html#installation)
-
-色温等具体值的查看：[https://www.cnblogs.com/ff888/p/16977114.html](https://www.cnblogs.com/ff888/p/16977114.html)
-
-只需要运行 
+```markdown
+chatgpt-actions/
+│
+├── api/
+│   ├── cat/
+│   │   └── index.php
+│   ├── close_curtains/
+│   │   └── index.php
+│   ├── get_cat_status/
+│   │   └── index.php
+│   ├── get_light_status/
+│   │   └── index.php
+│   ├── open_curtains/
+│   │   └── index.php
+│   ├── start_robotic_vacuum/
+│   │   └── index.php
+│   ├── stop_robotic_vacuum/
+│   │   └── index.php
+│   ├── turn_off_light/
+│   │   └── index.php
+│   └── turn_on_light/
+│       └── index.php
+│
+│
+├── iot_mi_smart_home/
+│   ├── token_extractor.py
+│   ├── requirements.txt
+│   └── devices/
+│       ├── light_control.py
+│       └── pet_feed_control.py
+│
+├── schema/
+│   └── commands.json
+│
+└──  README.md
 ```
-source myenv/bin/activate
 
-python3 token_extractor.py
+---
 
-python3 light_control_v2.py
+## 1. 后端接口 PHP 部分
+
+### 1.1 概述
+
+在本部分，我们将介绍 GPT-3 后端接口的 PHP 实现，用于与物联网设备进行通信以控制家用电器。以下是相关文件的路径：
+
+```markdown
+/chatgpt-actions/api/
 ```
 
-创建虚拟环境
+### 1.2 使用方法
+
+把php的文件内容上传到你需要的服务器
+
+## 2. 物联网部分
+
+### 2.1 概述
+
+在本部分，我们将介绍与小米智能家居控制相关的物联网部分。以下是相关文件夹的路径：
+
+`iot_mi_smart_home/`
+
+### 2.2 文件结构
+
+- **token_extractor.py**:获取小米设备的python代码。
+- **requirements.txt**:安装依赖
+- **devices/**: 包含每个家用电器的控制代码。
+
+### 2.3 使用方法
+
+2.3.1 创建虚拟环境
 
 ```bash
 python3 -m venv myenv
@@ -29,265 +82,57 @@ python3 -m venv myenv
 source myenv/bin/activate
 ```
 
-## 一、获取设备token
-
-安装压缩包并解压
-
-```bash
-wget [https://github.com/PiotrMachowski/Xiaomi-cloud-tokens-extractor/releases/latest/download/token_extractor.zip](https://github.com/PiotrMachowski/Xiaomi-cloud-tokens-extractor/releases/latest/download/token_extractor.zip)
-unzip token_extractor.zip
-cd token_extractor
-```
+2.3.2 安装依赖 
 
 ```bash
 pip3 install -r requirements.txt
 ```
 
-现在小米的miio更新了，用新的安装方式安装
-
-```bash
-pip install python-miio
-pip3 install aiohttp
-```
-
-然后运行如下代码，选择cn, 输入账户密码，即可获得，这一步不要用魔法哦
+2.3.3 获取云令牌
 
 ```bash
 python3 token_extractor.py
 ```
 
-## 二、使用
+2.3.4 记录下你想要控制的家电ip地址和token
 
-先写一个简单的控制开灯的脚本
+2.3.5 运行控制灯或者控制宠物喂食器的python
 
 ```bash
-from miio import Device
-
-plug = Device("你的设备ip地址", "你的设备tooken")
-#打开
-plug.send("set_properties", [{'did': 'MYDID', 'siid': 2, 'piid': 1, 'value': True}])
-#关闭
-plug.send("set_properties", [{'did': 'MYDID', 'siid': 2, 'piid': 1, 'value': False}])
+python3 light_conrol.py
+python3 pet_feed_control.py
 ```
 
-进阶，使用远程代码异步调用
+附: 参考链接
 
-```bash
-import time
-import requests
-from miio import Device
+1. (**云令牌提取器  参考地址** https://github.com/PiotrMachowski/Xiaomi-cloud-tokens-extractor)
+2. 小米python官网：[https://python-miio.readthedocs.io/en/latest/index.html#installation](https://python-miio.readthedocs.io/en/latest/index.html#installation)
+3. 小米的 [miIO](https://github.com/OpenMiHome/mihome-binary-protocol/blob/master/doc/PROTOCOL.md) 和 MIoT 协议控制设备官网 https://github.com/rytilahti/python-miio
 
-# Xiaomi设备的IP地址和token
-device_ip = ""
-device_token = ""
+## 3. Actions JSON 部分
 
-# 接口URL
-api_url = "https://你的API服务域名/api/get_light_status/"
+### 3.1 概述
 
-# 创建Xiaomi设备实例
-plug = Device(device_ip, device_token)
+在本部分，我们将介绍 Actions 的 JSON 部分，定义了与 GPT-3 互动时可用的指令和响应。以下是相关文件夹的路径：
 
-def control_light(value):
-    # 控制灯的开关
-    plug.send("set_properties", [{'did': 'MYDID', 'siid': 2, 'piid': 1, 'value': value}])
+ schema/ 
 
-def poll_api():
-    while True:
-        # 发起GET请求获取接口数据
-        response = requests.get(api_url)
-        
-        if response.status_code == 200:
-            # 解析JSON响应
-            data = response.json()
-            
-            # 获取灯的状态
-            light_status = data.get("light_on", "0")
-            
-            # 根据状态控制灯的开关
-            if light_status == "1":
-                print("开灯")
-                control_light(True)
-            elif light_status == "2":
-                print("关灯")
-                control_light(False)
-            else:
-                print("未知状态:", light_status)
-        else:
-            print("请求失败:", response.status_code)
-        
-        # 间隔一定时间再次发起请求
-        time.sleep(0.2)
-if __name__ == "__main__":
-    # 启动轮询
-    poll_api()
-```
+### 3.2 文件结构
 
-再次进阶，加入色温等值。这些值如何查看的呢？
+- **commands.json**: 包含用户可以使用的指令列表。
 
-第一步：安装miio,我们已经安装过了
+### 3.3 acitons内容
 
-第二步：在mac终端输入下面的 代码,查看您的型号，复制下来
+**Name**: xxx的家庭私人助理
 
-```bash
-miiocli -d device --ip xxx.xxx.xxx --token 您的token值 info
-```
+**Description: 智能家庭管家，家里的一切电器归我管**
 
-第三步：查看您的设备：在这个网址搜索您的型号，例如：urn:miot-spec-v2:device:light:0000A001:yeelink-lamp27:1
+**Instructions:**关于家庭的一切问题，你都能做出相应的决策。
+你需要认真观察家里的一切情况，并充分合理的使用你的能力。例如，家里的猫饿了，你要喂它。对了，家里有5只猫，你可以根据看到的猫的数量来决定喂食数量。此外，扫地机器人可以在需要清洁的时候启动，不论你看到或者听到房间有清洁问题的时候，你都可以决定是否启用扫地机器人。
+而灯光也是很重要的一个指标，在需要的时候，你可以开关灯。
 
-[http://miot-spec.org/miot-spec-v2/instances?status=al](https://miot-spec.org/miot-spec-v2/instances?status=all)
+Actions: 在commands.json里
 
-第四步：复制刚才的型号到[https://miot-spec.org/miot-spec-v2/instance?type=](https://miot-spec.org/miot-spec-v2/instance?type=urn:miot-spec-v2:device:light:0000A001:yeelink-lamp27:1)‘刚才复制的链接’ 打开链接：[https://miot-spec.org/miot-spec-v2/instance?type=urn:miot-spec-v2:device:light:0000A001:yeelink-lamp27:1](https://miot-spec.org/miot-spec-v2/instance?type=urn:miot-spec-v2:device:light:0000A001:yeelink-lamp27:1) 。这一步您将看到设备规格的未格式化 JSON 文本
+## 总结
 
-第五步：粘贴到json文本格式化程序更容易阅读 [http://json.parser.online.fr/](http://json.parser.online.fr/)
-
-![Untitled](%E5%B0%8F%E7%B1%B3%E6%99%BA%E8%83%BD%E7%AE%A1%E5%AE%B6python%E5%BC%80%E5%8F%91%20b96f9ad11be24db7b53857300cbd9fbe/Untitled.png)
-
-```bash
-#加入亮度
-import asyncio
-import aiohttp
-from miio import Device
-
-# Xiaomi设备的IP地址和token
-device_ip = "填写设备ip"
-device_token = "填写设备token"
-
-# 接口URL
-api_url = "https://填写你的API服务域名/api/get_light_status/"
-
-# 创建Xiaomi设备实例
-plug = Device(device_ip, device_token)
-
-async def control_light(value, brightness=None):
-    properties = [{'did': 'MYDID', 'siid': 2, 'piid': 1, 'value': value}]
-    
-    # 如果有亮度值，则替换掉原有的开关控制
-    if brightness is not None:
-        properties = [{'did': 'MYDID', 'siid': 2, 'piid': 2, 'code': 0, 'value': brightness}]
-
-    # 控制灯的开关和亮度
-    await plug.send("set_properties", properties)
-
-async def poll_api():
-    while True:
-        try:
-            # 发起 GET 请求获取接口数据
-            async with aiohttp.ClientSession() as session:
-                async with session.get(api_url, ssl=False) as response:
-                    if response.status == 200:
-                        # 解析 JSON 响应
-                        data = await response.json()
-
-                        # 获取灯的状态
-                        light_status = data.get("light_on", "0")
-                        
-                        if light_status == "1":
-                            # 获取亮度值
-                            light_value = data.get("light_value")
-                            print("开灯，亮度:", light_value)
-
-                            # 控制灯的亮度
-                            await control_light(True, brightness=int(light_value))
-                        elif light_status == "2":
-                            print("关灯")
-
-                            # 控制灯的开关
-                            await control_light(False)
-                        else:
-                            print("未知状态:", light_status)
-                    else:
-                        print("请求失败:", response.status)
-        except Exception as e:
-            print("发生异常:", str(e))
-
-        # 间隔一定时间再次发起请求
-        await asyncio.sleep(0.1)
-
-if __name__ == "__main__":
-    # 启动异步轮询任务
-    asyncio.run(poll_api())
-```
-
-有的报错{'code': -9999, 'message': 'user ack timeout'} 版本较低怎么办？
-
-先通过—help查看我们想要的设备yeelight 的具体型号yeelink.light.bslamp2  里面有哪些内容 
-
-```bash
-miiocli yeelight --model yeelink.light.bslamp2 --ip xxx --token xxx --help
-```
-
-然后找出我们需要的运行
-
-![Untitled](%E5%B0%8F%E7%B1%B3%E6%99%BA%E8%83%BD%E7%AE%A1%E5%AE%B6python%E5%BC%80%E5%8F%91%20b96f9ad11be24db7b53857300cbd9fbe/Untitled%201.png)
-
-```bash
-miiocli yeelight --model yeelink.light.bslamp2 --ip xx.xx.xx.xx --token xxx on
-```
-
-行得通 ，把上面的代码替换为⬇️
-
-```bash
-import asyncio
-import aiohttp
-import subprocess
-from miio import Device
-
-ip_address = "xxx"
-token = "xxx"
-model = "yeelink.light.bslamp2"
-api_url = "https://你的API服务域名/api/get_light_status/"
-
-# 创建Yeelight设备实例
-yeelight_device = Device(ip_address, token)
-
-async def control_yeelight(on, brightness=None):
-    on_cmd = f"miiocli yeelight --model {model} --ip {ip_address} --token {token} {'on' if on else 'off'}"
-    brightness_cmd = f"miiocli yeelight --model {model} --ip {ip_address} --token {token} set_brightness {brightness}" if brightness is not None else ""
-
-    # 使用subprocess运行命令
-    try:
-        subprocess.run(on_cmd, shell=True, check=True)
-        if brightness_cmd:
-            subprocess.run(brightness_cmd, shell=True, check=True)
-        print("灯已打开并调节亮度。")
-    except subprocess.CalledProcessError as e:
-        print(f"Error: {e}")
-
-async def poll_api():
-    while True:
-        try:
-            # 发起 GET 请求获取接口数据
-            async with aiohttp.ClientSession() as session:
-                async with session.get(api_url, ssl=False) as response:
-                    if response.status == 200:
-                        # 解析 JSON 响应
-                        data = await response.json()
-
-                        # 获取灯的状态
-                        light_status = data.get("light_on", "0")
-                        
-                        if light_status == "1":
-                            # 获取亮度值
-                            light_value = data.get("light_value")
-                            print("开灯，亮度:", light_value)
-
-                            # 控制Yeelight灯的开关和亮度
-                            await control_yeelight(True, brightness=int(light_value))
-                        elif light_status == "2":
-                            print("关灯")
-
-                            # 控制Yeelight灯的开关
-                            await control_yeelight(False)
-                        else:
-                            print("未知状态:", light_status)
-                    else:
-                        print("请求失败:", response.status)
-        except Exception as e:
-            print("发生异常:", str(e))
-
-        # 间隔一定时间再次发起请求
-        await asyncio.sleep(0.1)
-
-if __name__ == "__main__":
-    # 启动异步轮询任务
-    asyncio.run(poll_api())
+通过整合上述三部分内容，我们实现了使用 GPT-3 的 Actions 控制家用电器的功能。请按照文档的说明，逐步配置和使用这些部分，以便顺利实现家用电器的远程控制。
