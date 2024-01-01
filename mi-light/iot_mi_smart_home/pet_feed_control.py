@@ -54,7 +54,7 @@ if __name__ == "__main__":
     cat_feeder = CatFeeder(ip=device_info['ip'], token=device_info['token'])
     
     # 定义接口URL
-    api_url = "https://xxx.xxx.xx/gpts_dev/api/get_cat_status/"
+    api_url = "https://m.h5in.net/gpts_dev/api/get_cat_status/"
     
     # 启动异步轮询任务
     asyncio.run(cat_feeder.poll_api(api_url))
