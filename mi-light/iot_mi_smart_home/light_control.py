@@ -7,7 +7,7 @@ ip_address = ""
 token = ""
 model = "yeelink.light.bslamp2"
 # 获取灯状态的地址，api接口
-api_url = "https://xxx.xxx.xx/api/get_light_status/"  
+api_url = "https://m.h5in.net/gpts_dev/api/get_light_status/"  
 # 创建Yeelight设备实例
 yeelight_device = Device(ip_address, token)
 
